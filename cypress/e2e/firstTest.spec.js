@@ -34,4 +34,23 @@ describe("First test suite", () => {
     //The recomended way
     cy.get('[data-cy="imputEmail1"]');
   });
+
+  it.only("Second test", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.get('[data-cy="signInButton"]');
+    cy.contains('[status="warning"]', "Sign in");
+
+    cy.get("#inputEmail3")
+      .parents("form")
+      .find("button")
+      .should("contain", "Sign in")
+      .parents("form")
+      .find("nb-checkbox")
+      .click();
+
+    cy.contains("nb-card", "Horizontal form").find('[type="email"]');
+  });
 });
