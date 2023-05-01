@@ -35,12 +35,13 @@ describe("First test suite", () => {
     cy.get('[data-cy="imputEmail1"]');
   });
 
-  it.only("Second test", () => {
+  it("Second test", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
 
     cy.get('[data-cy="signInButton"]');
+    // cy.contains("Sign In");
     cy.contains('[status="warning"]', "Sign in");
 
     cy.get("#inputEmail3")
@@ -51,6 +52,56 @@ describe("First test suite", () => {
       .find("nb-checkbox")
       .click();
 
+    // cy.contains("Horizontal form")
+    //   .parents("nb-card")
+    //   .find('input[type="email"]');
+
+    //Find the element nb-card that contains "Horizontal form" and from there find the child element with type="email"
     cy.contains("nb-card", "Horizontal form").find('[type="email"]');
+  });
+
+  it.only("then and wrap methods", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    // cy.contains("nb-card", "Using the Grid")
+    //   .find('[for="inputEmail1"]')
+    //   .should("contain", "Email");
+    // cy.contains("nb-card", "Using the Grid")
+    //   .find('[for="inputPassword2"]')
+    //   .should("contain", "Password");
+
+    // cy.contains("nb-card", "Basic form")
+    //   .find('[for="exampleInputEmail1"]')
+    //   .should("contain", "Email address");
+    // cy.contains("nb-card", "Basic form")
+    //   .find('[for="exampleInputPassword1"]')
+    //   .should("contain", "Password");
+
+    cy.contains("nb-card", "Using the Grid").then((firstForm) => {
+      const emailLabelFirst = firstForm.find('[for="inputEmail1"]').text();
+      const passwordLabelFirst = firstForm
+        .find('[for="inputPassword2"]')
+        .text();
+
+      expect(emailLabelFirst).to.equal("Email");
+      expect(passwordLabelFirst).to.equal("Password");
+
+      cy.contains("nb-card", "Basic form").then((secondForm) => {
+        const emailLabelSecond = secondForm
+          .find('[for="exampleInputEmail1"]')
+          .text();
+        const passwordLabelSecond = secondForm
+          .find('[for="exampleInputPassword1"]')
+          .text();
+
+        expect(passwordLabelFirst).to.equal(passwordLabelSecond);
+
+        cy.wrap(secondForm)
+          .find('[for="exampleInputPassword1"]')
+          .should("contain", "Password");
+      });
+    });
   });
 });
