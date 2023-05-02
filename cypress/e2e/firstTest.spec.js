@@ -60,7 +60,7 @@ describe("First test suite", () => {
     cy.contains("nb-card", "Horizontal form").find('[type="email"]');
   });
 
-  it.only("then and wrap methods", () => {
+  it("then and wrap methods", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
@@ -103,5 +103,76 @@ describe("First test suite", () => {
           .should("contain", "Password");
       });
     });
+  });
+
+  it("invoke command", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    // //1
+    // cy.get('[for="exampleInputEmail1"]').should("contain", "Email address");
+
+    // //2
+    // cy.get('[for="exampleInputEmail1"]').then((label) => {
+    //   expect(label.text()).to.equal("Email address");
+    // });
+
+    // //3
+    // cy.get('[for="exampleInputEmail1"]')
+    //   .invoke("text")
+    //   .then((text) => expect(text).to.equal("Email address"));
+
+    cy.contains("nb-card", "Basic form")
+      .find("nb-checkbox")
+      .click()
+      .find("span.custom-checkbox")
+      .invoke("attr", "class")
+      // .should("contain", "checked")
+      .then((classValue) => expect(classValue).to.contain("checked"));
+  });
+
+  it("insert property", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Datepicker").click();
+
+    cy.contains("nb-card", "Common Datepicker")
+      .find('input[placeholder="Form Picker"]')
+      .then((input) => {
+        cy.wrap(input).click();
+        cy.get("nb-calendar-day-picker").contains("2").click();
+        cy.wrap(input).invoke("prop", "value").should("contain", "May 2, 2023");
+      });
+  });
+
+  it("radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.contains("nb-card", "Using the Grid")
+      .find('[type="radio"]')
+      .then((radioButtons) => {
+        cy.wrap(radioButtons)
+          .first()
+          .check({ force: true })
+          .should("be.checked");
+
+        cy.wrap(radioButtons).eq(1).check({ force: true }).should("be.checked");
+
+        cy.wrap(radioButtons).first().should("not.be.checked");
+
+        cy.wrap(radioButtons).eq(2).should("be.disabled");
+      });
+  });
+
+  it.only("checkboxes", () => {
+    cy.visit("/");
+    cy.contains("Modal & Overlays").click();
+    cy.contains("Toastr").click();
+
+    cy.get('[type="checkbox"]').eq(0).check({ force: true });
+    cy.get('[type="checkbox"]').eq(1).click({ force: true });
   });
 });
