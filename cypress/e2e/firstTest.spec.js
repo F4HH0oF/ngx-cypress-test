@@ -132,20 +132,6 @@ describe("First test suite", () => {
       .then((classValue) => expect(classValue).to.contain("checked"));
   });
 
-  it("insert property", () => {
-    cy.visit("/");
-    cy.contains("Forms").click();
-    cy.contains("Datepicker").click();
-
-    cy.contains("nb-card", "Common Datepicker")
-      .find('input[placeholder="Form Picker"]')
-      .then((input) => {
-        cy.wrap(input).click();
-        cy.get("nb-calendar-day-picker").contains("2").click();
-        cy.wrap(input).invoke("prop", "value").should("contain", "May 2, 2023");
-      });
-  });
-
   it("radio buttons", () => {
     cy.visit("/");
     cy.contains("Forms").click();
@@ -167,7 +153,7 @@ describe("First test suite", () => {
       });
   });
 
-  it.only("checkboxes", () => {
+  it("checkboxes", () => {
     cy.visit("/");
     cy.contains("Modal & Overlays").click();
     cy.contains("Toastr").click();
@@ -175,4 +161,54 @@ describe("First test suite", () => {
     cy.get('[type="checkbox"]').eq(0).check({ force: true });
     cy.get('[type="checkbox"]').eq(1).click({ force: true });
   });
+});
+
+it("insert property", () => {
+  cy.visit("/");
+  cy.contains("Forms").click();
+  cy.contains("Datepicker").click();
+
+  cy.contains("nb-card", "Common Datepicker")
+    .find('input[placeholder="Form Picker"]')
+    .then((input) => {
+      cy.wrap(input).click();
+      cy.get("nb-calendar-day-picker").contains("2").click();
+      cy.wrap(input).invoke("prop", "value").should("contain", "May 2, 2023");
+    });
+});
+
+it.only("web datepicker", () => {
+  cy.visit("/");
+  cy.contains("Forms").click();
+  cy.contains("Datepicker").click();
+
+  function selectDayFromCurrent(days) {
+    let date = new Date();
+    date.setDate(date.getDate() + days);
+    const futureDate = date.getDate();
+    const futureMonth = date.toLocaleString("default", { month: "short" });
+    const dateAssert = `${futureDate}${futureMonth}${date.getFullYear()}`;
+
+    cy.get("nb-calendar-navigation")
+      .invoke("attr", "ng-reflect-date")
+      .then((dateAttr) => {
+        if (!dateAttr.includes(futureMonth)) {
+          cy.get('[data-name="chevron-right"]').click();
+          selectDayFromCurrent(days);
+        } else {
+          cy.get('nb-calendar-day-picker [class="day-cell ng-star-inserted"]')
+            .contains(futureDate)
+            .click();
+        }
+      });
+    return dateAssert;
+  }
+
+  cy.contains("nb-card", "Common Datepicker")
+    .find("input")
+    .then((input) => {
+      cy.wrap(input).click();
+      const dateAssert = selectDayFromCurrent(300);
+      cy.wrap(input).invoke("props", "value").should("contian", dateAssert);
+    });
 });
