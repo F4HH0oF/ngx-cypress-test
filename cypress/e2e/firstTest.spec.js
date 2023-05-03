@@ -187,7 +187,7 @@ it.only("web datepicker", () => {
     date.setDate(date.getDate() + days);
     const futureDate = date.getDate();
     const futureMonth = date.toLocaleString("default", { month: "short" });
-    const dateAssert = `${futureDate}${futureMonth}${date.getFullYear()}`;
+    const dateAssert = `${futureMonth} ${futureDate}, ${date.getFullYear()}`;
 
     cy.get("nb-calendar-navigation")
       .invoke("attr", "ng-reflect-date")
@@ -209,6 +209,6 @@ it.only("web datepicker", () => {
     .then((input) => {
       cy.wrap(input).click();
       const dateAssert = selectDayFromCurrent(300);
-      cy.wrap(input).invoke("props", "value").should("contian", dateAssert);
+      cy.wrap(input).invoke("prop", "value").should("contain", dateAssert);
     });
 });
