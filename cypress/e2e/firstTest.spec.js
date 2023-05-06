@@ -310,25 +310,27 @@ it("tooltip", () => {
   cy.get("nb-tooltip").should("contain", "This is a tooltip");
 });
 
-it.only("Dialog window", () => {
+it("Dialog window", () => {
   cy.visit("/");
   cy.contains("Tables & Data").click();
   cy.contains("Smart Table").click();
 
-  //Window message expectation
-  // const stub = cy.stub();
-  // cy.on("window:confirm", stub);
-  // cy.get("tbody tr")
-  //   .first()
-  //   .find(".nb-trash")
-  //   .click()
-  //   .then(() => {
-  //     expect(stub.getCall(0)).to.be.calledWith(
-  //       "Are you sure you want to delete?"
-  //     );
-  //   });
+  // Window message expectation
+  const stub = cy.stub();
+  cy.on("window:confirm", stub);
+  cy.get("tbody tr")
+    .first()
+    .find(".nb-trash")
+    .click()
+    .then(() => {
+      expect(stub.getCall(0)).to.be.calledWith(
+        "Are you sure you want to delete?"
+      );
+    });
 
   //Delete or cancel functionality
   cy.get("tbody tr").first().find(".nb-trash").click();
   cy.on("window:confirm", () => true);
 });
+
+it.only("", () => {});
