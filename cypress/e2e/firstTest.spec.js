@@ -332,5 +332,3 @@ it("Dialog window", () => {
   cy.get("tbody tr").first().find(".nb-trash").click();
   cy.on("window:confirm", () => true);
 });
-
-it.only("", () => {});
