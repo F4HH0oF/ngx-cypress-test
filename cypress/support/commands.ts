@@ -35,3 +35,13 @@
 //     }
 //   }
 // }
+
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    openHomePage(): Chainable<Subject>;
+  }
+}
+
+Cypress.Commands.add("openHomePage", () => {
+  cy.visit("/");
+});

@@ -7,7 +7,7 @@ const { navigateTo } = require("../support/page_objects/navigationPage");
 
 describe("Test with page objects", () => {
   beforeEach("open app", () => {
-    cy.visit("/");
+    cy.openHomePage();
   });
 
   it("verify navigation across the pages", () => {
